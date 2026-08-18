@@ -131,3 +131,93 @@ class BacktestResponse(BaseModel):
     stock: StockOut
     algorithm_version: str
     summaries: list[BacktestSummary]
+
+
+class BracketStatsOut(BaseModel):
+    range_label: str
+    count: int
+    avg_return_1d: float | None = None
+    avg_return_5d: float | None = None
+    avg_return_10d: float | None = None
+    avg_return_20d: float | None = None
+    avg_return_60d: float | None = None
+    median_return_20d: float | None = None
+    win_rate_20d: float | None = None
+
+
+class ICOut(BaseModel):
+    ic_1d: float | None = None
+    ic_5d: float | None = None
+    ic_10d: float | None = None
+    ic_20d: float | None = None
+    ic_60d: float | None = None
+    p_value_20d: float | None = None
+
+
+class SignificanceOut(BaseModel):
+    t_stat: float | None = None
+    p_value: float | None = None
+    high_score_count: int
+    all_count: int
+    high_score_avg_20d: float | None = None
+    all_avg_20d: float | None = None
+
+
+class BootstrapOut(BaseModel):
+    mean_20d: float | None = None
+    ci_95_lower: float | None = None
+    ci_95_upper: float | None = None
+    n_resamples: int
+
+
+class WalkForwardWindowOut(BaseModel):
+    window_start: str
+    window_end: str
+    events: int
+    avg_return_20d: float | None = None
+
+
+class WalkForwardOut(BaseModel):
+    windows: int
+    total_events: int
+    avg_return_20d: float | None = None
+    win_rate_20d: float | None = None
+    avg_events_per_window: float | None = None
+    details: list[WalkForwardWindowOut]
+
+
+class MonteCarloOut(BaseModel):
+    actual_avg_return_20d: float | None = None
+    null_mean: float | None = None
+    null_std: float | None = None
+    p_value: float | None = None
+    n_simulations: int
+
+
+class RiskOut(BaseModel):
+    sharpe_1d: float | None = None
+    sharpe_20d: float | None = None
+    max_drawdown: float | None = None
+    calmar_ratio: float | None = None
+
+
+class BenchmarkOut(BaseModel):
+    benchmark_avg_return_20d: float | None = None
+    strategy_avg_return_20d: float | None = None
+    excess_return_20d: float | None = None
+    information_ratio: float | None = None
+
+
+class EvaluationResponse(BaseModel):
+    stock: StockOut
+    algorithm_version: str
+    bar_count: int
+    brackets: list[BracketStatsOut]
+    ic: ICOut
+    monotonicity_score: float
+    significance: SignificanceOut
+    bootstrap: BootstrapOut
+    walk_forward: WalkForwardOut
+    monte_carlo: MonteCarloOut
+    risk: RiskOut
+    benchmark: BenchmarkOut

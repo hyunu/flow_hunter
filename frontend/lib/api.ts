@@ -2,6 +2,7 @@ import type {
   AnalysisResponse,
   AnalyzeSummary,
   BacktestResponse,
+  EvaluationResponse,
   EventsResponse,
   MarketName,
   Stock,
@@ -64,4 +65,8 @@ export function fetchEvents(symbol: string, market: MarketName): Promise<EventsR
 
 export function fetchBacktest(symbol: string, market: MarketName): Promise<BacktestResponse> {
   return request(`/api/backtest/${symbol}?market=${market}`);
+}
+
+export function fetchEvaluation(symbol: string, market: MarketName): Promise<EvaluationResponse> {
+  return request(`/api/evaluation/${symbol}?market=${market}`);
 }

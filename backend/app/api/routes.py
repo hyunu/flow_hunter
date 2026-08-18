@@ -15,6 +15,7 @@ from app.schemas.dto import (
     AnalyzeRequest,
     AnalyzeSummary,
     BacktestResponse,
+    EvaluationResponse,
     EventsResponse,
     StockOut,
 )
@@ -140,4 +141,19 @@ def get_backtest(
         stock=StockOut(**analysis_service.stock_payload(stock)),
         algorithm_version=ALGORITHM_VERSION,
         summaries=analysis_service.load_backtest_summary(db, stock),
+    )
+
+
+@router.get("/api/evaluation/{symbol}", response_model=EvaluationResponse)
+def get_evaluation(
+    symbol: str,
+    market: str = Query(default="KOSPI"),
+    db: Session = Depends(get_db),
+) -> EvaluationResponse:
+    stock = _stock_or_404(db, market, symbol)
+    result = analysis_service.run_evaluation(db, stock)
+    return EvaluationResponse(
+        stock=StockOut(**analysis_service.stock_payload(stock)),
+        algorithm_version=ALGORITHM_VERSION,
+        **result,
     )

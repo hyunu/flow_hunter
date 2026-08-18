@@ -6,13 +6,14 @@ import { Suspense, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import BacktestCards from "@/components/BacktestCards";
 import BarTooltip from "@/components/BarTooltip";
+import EvaluationDashboard from "@/components/EvaluationDashboard";
 import EventTable from "@/components/EventTable";
 import PriceChart from "@/components/PriceChart";
 import RegimeStrip from "@/components/RegimeStrip";
-import { fetchAnalysis, fetchBacktest, fetchEvents } from "@/lib/api";
+import { fetchAnalysis, fetchBacktest, fetchEvents, fetchEvaluation } from "@/lib/api";
 import { formatScore } from "@/lib/format";
 import { attachMovingAverages } from "@/lib/ma";
-import type { AnalysisResponse, BacktestResponse, Bar, EventsResponse, MarketName } from "@/lib/types";
+import type { AnalysisResponse, BacktestResponse, Bar, EvaluationResponse, EventsResponse, MarketName } from "@/lib/types";
 
 function AnalyzeInner() {
   const params = useParams<{ symbol: string }>();
@@ -26,6 +27,7 @@ function AnalyzeInner() {
   const [analysis, setAnalysis] = useState<AnalysisResponse | null>(null);
   const [events, setEvents] = useState<EventsResponse | null>(null);
   const [backtest, setBacktest] = useState<BacktestResponse | null>(null);
+  const [evaluation, setEvaluation] = useState<EvaluationResponse | null>(null);
   const [selected, setSelected] = useState<Bar | null>(null);
   const [error, setError] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
@@ -36,13 +38,15 @@ function AnalyzeInner() {
       fetchAnalysis(symbol, market, start, end),
       fetchEvents(symbol, market),
       fetchBacktest(symbol, market),
+      fetchEvaluation(symbol, market),
     ])
-      .then(([analysisBody, eventsBody, backtestBody]) => {
+      .then(([analysisBody, eventsBody, backtestBody, evaluationBody]) => {
         if (cancelled) return;
         const bars = attachMovingAverages(analysisBody.bars);
         setAnalysis({ ...analysisBody, bars });
         setEvents(eventsBody);
         setBacktest(backtestBody);
+        setEvaluation(evaluationBody);
         setSelected(bars.at(-1) ?? null);
       })
       .catch((err: Error) => {
@@ -164,6 +168,8 @@ function AnalyzeInner() {
           : chartPanel}
 
         {backtest ? <BacktestCards summaries={backtest.summaries} /> : null}
+
+        {evaluation ? <EvaluationDashboard data={evaluation} /> : null}
 
         <section className="card">
           <div className="panel-title">

@@ -359,6 +359,107 @@ def load_backtest_summary(db: Session, stock: Stock) -> list[dict]:
     ]
 
 
+def run_evaluation(db: Session, stock: Stock) -> dict:
+    from app.engine.evaluation import (
+        BootstrapResult,
+        BracketStats,
+        EvaluationResult,
+        ICResult,
+        MonteCarloResult,
+        RiskResult,
+        SignificanceResult,
+        WalkForwardResult,
+        evaluate,
+    )
+
+    ohlcv = load_ohlcv(db, stock)
+    market_stock = db.scalar(
+        select(Stock).where(
+            Stock.market == stock.market,
+            Stock.symbol == MARKET_INDEX.get(stock.market, "KS11"),
+        )
+    )
+    market_ohlcv = load_ohlcv(db, market_stock) if market_stock is not None else None
+
+    result = evaluate(ohlcv, market_ohlcv)
+
+    return {
+        "bar_count": result.bar_count,
+        "brackets": [
+            {
+                "range_label": b.range_label,
+                "count": b.count,
+                "avg_return_1d": b.avg_return_1d,
+                "avg_return_5d": b.avg_return_5d,
+                "avg_return_10d": b.avg_return_10d,
+                "avg_return_20d": b.avg_return_20d,
+                "avg_return_60d": b.avg_return_60d,
+                "median_return_20d": b.median_return_20d,
+                "win_rate_20d": b.win_rate_20d,
+            }
+            for b in result.brackets
+        ],
+        "ic": {
+            "ic_1d": result.ic.ic_1d,
+            "ic_5d": result.ic.ic_5d,
+            "ic_10d": result.ic.ic_10d,
+            "ic_20d": result.ic.ic_20d,
+            "ic_60d": result.ic.ic_60d,
+            "p_value_20d": result.ic.p_value_20d,
+        },
+        "monotonicity_score": result.monotonicity_score,
+        "significance": {
+            "t_stat": result.significance.t_stat,
+            "p_value": result.significance.p_value,
+            "high_score_count": result.significance.high_score_count,
+            "all_count": result.significance.all_count,
+            "high_score_avg_20d": result.significance.high_score_avg_20d,
+            "all_avg_20d": result.significance.all_avg_20d,
+        },
+        "bootstrap": {
+            "mean_20d": result.bootstrap.mean_20d,
+            "ci_95_lower": result.bootstrap.ci_95_lower,
+            "ci_95_upper": result.bootstrap.ci_95_upper,
+            "n_resamples": result.bootstrap.n_resamples,
+        },
+        "walk_forward": {
+            "windows": result.walk_forward.windows,
+            "total_events": result.walk_forward.total_events,
+            "avg_return_20d": result.walk_forward.avg_return_20d,
+            "win_rate_20d": result.walk_forward.win_rate_20d,
+            "avg_events_per_window": result.walk_forward.avg_events_per_window,
+            "details": [
+                {
+                    "window_start": w.window_start,
+                    "window_end": w.window_end,
+                    "events": w.events,
+                    "avg_return_20d": w.avg_return_20d,
+                }
+                for w in result.walk_forward.details
+            ],
+        },
+        "monte_carlo": {
+            "actual_avg_return_20d": result.monte_carlo.actual_avg_return_20d,
+            "null_mean": result.monte_carlo.null_mean,
+            "null_std": result.monte_carlo.null_std,
+            "p_value": result.monte_carlo.p_value,
+            "n_simulations": result.monte_carlo.n_simulations,
+        },
+        "risk": {
+            "sharpe_1d": result.risk.sharpe_1d,
+            "sharpe_20d": result.risk.sharpe_20d,
+            "max_drawdown": result.risk.max_drawdown,
+            "calmar_ratio": result.risk.calmar_ratio,
+        },
+        "benchmark": {
+            "benchmark_avg_return_20d": result.benchmark.benchmark_avg_return_20d,
+            "strategy_avg_return_20d": result.benchmark.strategy_avg_return_20d,
+            "excess_return_20d": result.benchmark.excess_return_20d,
+            "information_ratio": result.benchmark.information_ratio,
+        },
+    }
+
+
 def latest_from_bars(bars: list[dict]) -> dict | None:
     if not bars:
         return None
