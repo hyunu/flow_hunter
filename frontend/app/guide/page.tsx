@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { STATE_COLORS } from "@/lib/format";
 
 const STATES = [
@@ -46,6 +47,25 @@ const STATES = [
   },
 ];
 
+function Fold({
+  title,
+  id,
+  children,
+}: {
+  title: string;
+  id?: string;
+  children: ReactNode;
+}) {
+  return (
+    <details className="card guide-fold" id={id} open>
+      <summary>
+        <h2>{title}</h2>
+      </summary>
+      <div className="guide-fold-body">{children}</div>
+    </details>
+  );
+}
+
 export default function GuidePage() {
   return (
     <main className="shell">
@@ -62,22 +82,20 @@ export default function GuidePage() {
       <p className="lede">
         FlowHunter는 누가 샀는지 찾아내지 않습니다. 거래량, 거래대금, 가격이 움직이는 모양을 보고
         <strong> 큰돈이 들어왔거나 빠져나갔을 가능성</strong>을 점수로 보여 줍니다. 아래는 화면에 나오는
-        말과 숫자를 일상 언어로 풀어 둔 설명입니다.
+        말과 숫자를 일상 언어로 풀어 둔 설명입니다. 카드 제목을 누르면 접거나 펼 수 있습니다.
       </p>
 
       <div className="guide">
-        <section className="card">
-          <h2>한 줄로</h2>
+        <Fold title="한 줄로">
           <ol className="howto">
             <li>종목을 고르면 최근 수년 일봉을 분석합니다.</li>
             <li>날마다 0~100점의 Smart Money Score와 상태를 붙입니다.</li>
             <li>비슷한 상태가 이어진 구간을 “탐지 이벤트”로 묶습니다.</li>
             <li>그 구간 이후 주가가 실제로 어떻게 됐는지만 따로 집계합니다. 이 수익률은 점수 계산에 쓰지 않습니다.</li>
           </ol>
-        </section>
+        </Fold>
 
-        <section className="card">
-          <h2>결과를 이렇게 읽으세요</h2>
+        <Fold title="결과를 이렇게 읽으세요">
           <div className="split">
             <article>
               <h3>봐도 되는 것</h3>
@@ -96,10 +114,9 @@ export default function GuidePage() {
               </ul>
             </article>
           </div>
-        </section>
+        </Fold>
 
-        <section className="card">
-          <h2>맨 위 숫자</h2>
+        <Fold title="맨 위 숫자">
           <dl className="glossary">
             <div>
               <dt>Smart Money Score</dt>
@@ -123,9 +140,7 @@ export default function GuidePage() {
             </div>
             <div>
               <dt>현재 상태</dt>
-              <dd>
-                그날 점수와 최근 흐름을 보고 붙인 이름입니다. 아래 상태 설명을 기준으로 읽습니다.
-              </dd>
+              <dd>그날 점수와 최근 흐름을 보고 붙인 이름입니다. 아래 상태 설명을 기준으로 읽습니다.</dd>
             </div>
             <div>
               <dt>이벤트</dt>
@@ -135,10 +150,9 @@ export default function GuidePage() {
               </dd>
             </div>
           </dl>
-        </section>
+        </Fold>
 
-        <section className="card">
-          <h2>상태 이름</h2>
+        <Fold title="상태 이름">
           <p className="muted" style={{ marginTop: 0 }}>
             차트 위 색 띠와 마커, 표의 배지가 같은 뜻을 씁니다. “세력이 한다”가 아니라 “그런 모양으로
             보인다”입니다.
@@ -158,10 +172,9 @@ export default function GuidePage() {
               </li>
             ))}
           </ul>
-        </section>
+        </Fold>
 
-        <section className="card">
-          <h2>차트 3개</h2>
+        <Fold title="차트 3개">
           <p>
             분석 화면의 차트는 같은 날짜를 세로로 맞춰 둔 칸이 세 개입니다. 위아래를 같이 보면 “가격이
             움직일 때 거래와 점수가 어땠는지”를 한눈에 볼 수 있습니다.
@@ -206,9 +219,7 @@ export default function GuidePage() {
             </div>
             <div>
               <dt>60 (주황)</dt>
-              <dd>
-                대략 분기. 중기 추세입니다. Score의 추세 판단에도 이 선을 참고합니다.
-              </dd>
+              <dd>대략 분기. 중기 추세입니다. Score의 추세 판단에도 이 선을 참고합니다.</dd>
             </div>
             <div>
               <dt>매물대 (가격대별 거래량)</dt>
@@ -225,10 +236,9 @@ export default function GuidePage() {
             차트 위쪽 얇은 색 띠는 날짜를 따라 상태가 어떻게 바뀌었는지만 보여 줍니다. 휠은 가로로
             확대·축소, 더블클릭은 전체 기간으로 돌아갑니다.
           </p>
-        </section>
+        </Fold>
 
-        <section className="card">
-          <h2>차트를 클릭하면 나오는 값</h2>
+        <Fold title="차트를 클릭하면 나오는 값">
           <dl className="glossary">
             <div>
               <dt>Vol (거래량 배수)</dt>
@@ -255,10 +265,9 @@ export default function GuidePage() {
               </dd>
             </div>
           </dl>
-        </section>
+        </Fold>
 
-        <section className="card">
-          <h2>탐지 이벤트 표</h2>
+        <Fold title="탐지 이벤트 표">
           <p>
             같은 상태가 이어진 구간을 한 줄로 압축한 목록입니다. 피크일은 그 구간에서 점수가 가장 높았던
             날입니다.
@@ -273,19 +282,162 @@ export default function GuidePage() {
               </dd>
             </div>
           </dl>
-        </section>
+        </Fold>
 
-        <section className="card">
-          <h2>Score ≥ 숫자 카드</h2>
+        <Fold title="Score ≥ 숫자 카드">
           <p>
             점수가 그 값 이상인 이벤트만 모아, 피크일 이후 20일 평균 수익률과 승률을 보여 줍니다. 건수가
             적으면 평균이 한두 번에 흔들립니다. 과거 이 종목에서 비슷한 점수 구간 뒤에 어떤 경향이 있었는지
             참고용입니다.
           </p>
-        </section>
+        </Fold>
 
-        <section className="card">
-          <h2>알아 둘 한계</h2>
+        <Fold title="평가 리포트, 이렇게 읽으세요" id="eval-report">
+          <p>
+            평가 리포트는 “점수가 높았던 날 뒤에, 이 종목 주가가 실제로 더 잘 갔는가”를 여러 각도에서
+            검증합니다. 차트와 이벤트 표가 <em>무엇을 봤는지</em>라면, 평가 리포트는 <em>그 보기 방식이
+            이 종목의 과거에서 통했는지</em>입니다. 숫자는 이 종목·이 기간의 과거일 뿐, 다음 20일을
+            맞힌다는 뜻이 아닙니다.
+          </p>
+          <h3>먼저 이 순서로</h3>
+          <ol className="howto">
+            <li>
+              구간별 수익률이 왼쪽(낮은 점수)에서 오른쪽(높은 점수)으로 올라가는지 봅니다. 단조성입니다.
+            </li>
+            <li>
+              Information Coefficient(IC)가 양수인지, 특히 20일 값이 0.1을 넘고 p값이 작은지 봅니다.
+            </li>
+            <li>
+              Score ≥ 60인 날의 20일 수익률이 전체 평균보다 나은지, 그 차이가 우연으로 보기 어려운지
+              (유의성·Bootstrap·몬테카를로)를 같이 봅니다.
+            </li>
+            <li>
+              시장 지수보다 나았는지(벤치마크), 시기마다 들쑥날쑥하지 않았는지(Walk-Forward)를 확인합니다.
+            </li>
+            <li>
+              한 칸만 좋아도 충분하지 않습니다. 단조성·IC·유의성·무작위 대비가 같은 방향을 가리킬 때
+              “이 종목에서는 점수가 과거 수익과 맞물렸다” 정도로 읽습니다.
+            </li>
+          </ol>
+          <p className="hint">
+            여러 칸이 서로 어긋나면, 표본이 적거나 한두 번의 급등·급락에 평균이 끌려간 경우가 많습니다.
+            그때는 이벤트 표의 건수와 기간을 먼저 의심하세요.
+          </p>
+
+          <dl className="glossary">
+            <div>
+              <dt>Score 구간별 수익률</dt>
+              <dd>
+                모든 거래일을 점수 20점 단위(0–20, 20–40, …, 80–100)로 나눈 뒤, 각 구간의 <strong>그다음
+                20거래일 평균 수익률</strong>과 승률을 보여 줍니다. 막대가 오른쪽으로 갈수록 길어지고
+                초록이면 “점수가 높을수록 그 뒤 수익이 좋았다”는 그림입니다. 막대가 들쭉날쭉하거나 높은
+                점수에서 오히려 빨강이면, 이 종목에서는 점수와 수익의 관계가 약합니다.
+                <p className="hint">
+                  단조성은 인접한 구간끼리 평균 수익률이 낮아지지 않은 비율입니다. 80% 이상이면 화면에
+                  “양호”가 붙습니다. 구간에 속한 날(bars)이 너무 적으면 막대 하나에도 흔들립니다.
+                </p>
+              </dd>
+            </div>
+            <div>
+              <dt>Information Coefficient (IC)</dt>
+              <dd>
+                그날의 점수 순위와, 그 뒤 1·5·10·20·60일 수익률 순위가 얼마나 같이 움직이는지입니다
+                (Spearman 상관계수, −1 ~ +1). 0이면 무관, 양수면 “점수 높은 날이 그 뒤에도 상대적으로
+                더 올랐다”, 음수면 반대입니다.
+                <p className="hint">
+                  보통 20일 IC가 0.1을 넘으면 이 종목에서 점수가 어느 정도 순서를 가렸다고 봅니다. 20일
+                  p값은 “이 상관이 우연인가”에 가깝습니다. p &lt; 0.05면 우연이라고 보기 어렵고, p가 0.10을
+                  넘으면 IC가 좋아 보여도 확신하기 어렵습니다. 표본이 10일 미만이면 계산하지 않습니다.
+                </p>
+              </dd>
+            </div>
+            <div>
+              <dt>통계적 유의성</dt>
+              <dd>
+                Score가 60 이상인 날만 모아 20일 수익률 평균을 구하고, 모든 날의 평균과 비교합니다
+                (Welch t검정). 고스코어 평균이 전체보다 높고 t-stat이 양수면, 고득점 날이 평균적으로 더
+                좋았다는 뜻입니다.
+                <p className="hint">
+                  p &lt; 0.05는 그 차이가 우연일 가능성이 작다는 관례적 기준입니다. 고스코어 건수가 적으면
+                  (대략 수십 건 미만) p값이 커지기 쉽습니다. 건수 표시를 함께 보세요.
+                </p>
+              </dd>
+            </div>
+            <div>
+              <dt>Bootstrap 신뢰구간</dt>
+              <dd>
+                Score ≥ 60인 날의 20일 수익률을 1,000번 다시 뽑아 평균을 구한 뒤, 가운데 95%가 놓인
+                구간입니다. 화면의 왼쪽·오른쪽 숫자가 그 하한·상한이고, 가운데 점은 실제 평균입니다.
+                <p className="hint">
+                  하한이 0보다 크면, 다시 뽑아도 평균이 플러스에 머물 때가 많았다는 뜻입니다. 구간이 0을
+                  가로지르면 “플러스일 수도, 마이너스일 수도 있다”입니다. 고득점 날이 5일 미만이면 구간을
+                  그리지 않습니다.
+                </p>
+              </dd>
+            </div>
+            <div>
+              <dt>몬테카를로 검정</dt>
+              <dd>
+                탐지된 이벤트와 <strong>같은 개수의 날짜를 무작위로</strong> 뽑아, 그 날들 이후 20일
+                수익률 평균을 5,000번 만듭니다. “아무 날이나 골라도 나왔을 법한 수익”과, 실제로 이벤트가
+                찍힌 날의 수익을 비교합니다.
+                <p className="hint">
+                  실제 평균이 무작위 평균보다 높고 p값이 작으면, 이벤트 날짜가 아무 날이나 고른 것보다
+                  나았다는 쪽에 가깝습니다. p는 “무작위 평균이 실제 이상인 비율”입니다. 이벤트가 없으면
+                  비어 있습니다.
+                </p>
+              </dd>
+            </div>
+            <div>
+              <dt>리스크 메트릭</dt>
+              <dd>
+                수익만 보지 않고, 흔들림과 낙폭을 같이 본 값입니다. Sharpe는 평균 수익을 변동성으로 나눈
+                값이라, 같은 수익이어도 덜 출렁이면 커집니다. 1일 Sharpe는 일간 수익률, 20일 Sharpe는
+                20일 수익률 기준입니다. 최대낙폭은 분석 기간 종가가 고점 대비 가장 많이 빠진 비율입니다.
+                Calmar는 연율에 가까운 수익을 그 낙폭으로 나눈 값입니다.
+                <p className="hint">
+                  20일 Sharpe가 1을 넘으면 변동 대비 보상이 괜찮은 편으로 읽는 경우가 많습니다. 낙폭이
+                  크면 평균이 좋아도 중간에 견디기 어려웠다는 뜻입니다. 미래 손실 한도가 아닙니다.
+                </p>
+              </dd>
+            </div>
+            <div>
+              <dt>벤치마크 대비</dt>
+              <dd>
+                Score ≥ 60인 날의 20일 평균 수익률을, 같은 기간 시장 지수(코스피 또는 코스닥)의 20일
+                평균과 비교합니다. 초과수익은 전략 평균에서 시장 평균을 뺀 값입니다. Information Ratio는
+                그 초과수익을 전략 수익률의 흔들림으로 나눈 값입니다.
+                <p className="hint">
+                  전략이 플러스여도 시장이 더 많이 올랐으면 초과수익은 음수입니다. “장 덕분에 오른 것”과
+                  “이 종목의 고득점 날이 장보다 나았는지”를 가르는 칸입니다. 시장 데이터가 없으면 비어
+                  있습니다.
+                </p>
+              </dd>
+            </div>
+            <div>
+              <dt>Walk-Forward 분석</dt>
+              <dd>
+                앞부분만 보고 점수를 만든 뒤, 바로 다음 약 20거래일에서 이벤트를 잡아 20일 수익률을 재는
+                일을 기간을 밀어 가며 반복합니다. 막대 하나는 그 테스트 구간의 평균이고, 아래 숫자는 그
+                구간에서 잡힌 이벤트 수입니다.
+                <p className="hint">
+                  전체 기간을 한 번에 돌린 결과만 좋으면 과적합일 수 있습니다. 막대가 대부분 초록이고
+                  승률이 안정되면, 시기를 나눠 봐도 비슷한 경향이 있었다는 쪽에 가깝습니다. 어떤 구간만
+                  크게 튀면 그 한 번의 급등에 평균이 끌려간 것입니다. 데이터가 120일보다 짧으면 창이
+                  없습니다.
+                </p>
+              </dd>
+            </div>
+          </dl>
+          <h3>이렇게는 읽지 마세요</h3>
+          <ul>
+            <li>p값이 작다고 해서 내일 사라는 뜻이 아닙니다. “이 종목의 과거에서 우연은 아니었다”에 가깝습니다.</li>
+            <li>IC나 단조성은 종목마다 다릅니다. 삼성전자에서 좋았다고 다른 종목에도 같지는 않습니다.</li>
+            <li>평가에 쓰는 20일 수익률은 점수 계산에 넣지 않습니다. 그래도 과거를 여러 방식으로 썰어 본 결과라, 같은 과거를 반복 검증한 한계는 있습니다.</li>
+          </ul>
+        </Fold>
+
+        <Fold title="알아 둘 한계">
           <ul>
             <li>일봉만 사용합니다. 장중 호가·실시간 수급은 없습니다.</li>
             <li>투자자별(외국인·기관) 매매는 넣지 않습니다.</li>
@@ -296,7 +448,7 @@ export default function GuidePage() {
             결과는 대규모 자금 활동 가능성의 추정이며, 특정 세력의 존재나 미래 수익을 증명·보장하지 않습니다.
             투자 권유가 아닙니다.
           </p>
-        </section>
+        </Fold>
       </div>
     </main>
   );

@@ -3,7 +3,7 @@ import type { BacktestSummary } from "@/lib/types";
 
 export default function BacktestCards({ summaries }: { summaries: BacktestSummary[] }) {
   return (
-    <div className="metrics">
+    <div className="backtest-metrics">
       {summaries.map((item) => (
         <article className="metric" key={item.min_score}>
           <div className="k">Score ≥ {item.min_score} · {item.event_count}건</div>

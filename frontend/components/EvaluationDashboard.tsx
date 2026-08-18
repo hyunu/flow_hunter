@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { formatPct, formatScore } from "@/lib/format";
 import type { EvaluationResponse } from "@/lib/types";
 
@@ -56,11 +57,17 @@ export default function EvaluationDashboard({ data }: { data: EvaluationResponse
     <section className="card eval-section">
       <div className="panel-title">
         <h2 style={{ margin: 0, fontSize: 18 }}>평가 리포트</h2>
-        <span className="muted">Score가 실제로 수익률을 예측하는지 검증</span>
+        <span className="muted">
+          Score가 실제로 수익률을 예측하는지 검증
+          {" · "}
+          <Link className="text-btn" href="/guide#eval-report">
+            해석
+          </Link>
+        </span>
       </div>
 
       <div className="eval-grid">
-        <div className="eval-card">
+        <div className="eval-card eval-card-span2">
           <h3>Score 구간별 수익률</h3>
           <p className="eval-desc">Score가 높을수록 20일 수익률이 좋아지는가</p>
           <div className="eval-brackets">
@@ -83,12 +90,20 @@ export default function EvaluationDashboard({ data }: { data: EvaluationResponse
         <div className="eval-card">
           <h3>Information Coefficient</h3>
           <p className="eval-desc">Score와 전방수익률의 순위상관 (Spearman)</p>
-          <div className="eval-stats-row">
+          <div className="eval-ic-grid">
             <Stat label="1일" value={formatScore(ic.ic_1d)} />
             <Stat label="5일" value={formatScore(ic.ic_5d)} />
             <Stat label="10일" value={formatScore(ic.ic_10d)} />
-            <Stat label="20일" value={formatScore(ic.ic_20d)} color={ic.ic_20d !== null && ic.ic_20d > 0.1 ? "var(--good)" : undefined} />
+            <Stat
+              label="20일"
+              value={formatScore(ic.ic_20d)}
+              color={ic.ic_20d !== null && ic.ic_20d > 0.1 ? "var(--good)" : undefined}
+            />
             <Stat label="60일" value={formatScore(ic.ic_60d)} />
+            <div className="eval-stat">
+              <span>20일 p값</span>
+              <PValueBadge pValue={ic.p_value_20d} />
+            </div>
           </div>
           <div className="eval-mono">
             IC &gt; 0.1이면 의미 있는 예측력
@@ -98,7 +113,7 @@ export default function EvaluationDashboard({ data }: { data: EvaluationResponse
         <div className="eval-card">
           <h3>통계적 유의성</h3>
           <p className="eval-desc">Score ≥ 60 바의 수익률이 전체보다 의미 있게 다른가</p>
-          <div className="eval-stats-row">
+          <div className="eval-stats-3">
             <Stat
               label="고스코어 20일 평균"
               value={formatPct(significance.high_score_avg_20d)}
@@ -140,7 +155,7 @@ export default function EvaluationDashboard({ data }: { data: EvaluationResponse
         <div className="eval-card">
           <h3>몬테카를로 검정</h3>
           <p className="eval-desc">무작위 날짜 기반 null 분포와의 비교</p>
-          <div className="eval-stats-row">
+          <div className="eval-stats-3">
             <Stat label="실제 평균" value={formatPct(monte_carlo.actual_avg_return_20d)} color="var(--copper)" />
             <Stat label="무작위 평균" value={formatPct(monte_carlo.null_mean)} />
             <Stat label="무작위 표준편차" value={formatPct(monte_carlo.null_std)} />
@@ -154,7 +169,7 @@ export default function EvaluationDashboard({ data }: { data: EvaluationResponse
         <div className="eval-card">
           <h3>리스크 메트릭</h3>
           <p className="eval-desc">Score ≥ 60 구간의 위험 조정 수익률</p>
-          <div className="eval-stats-row">
+          <div className="eval-stats-2x2">
             <Stat label="Sharpe (1일)" value={formatScore(risk.sharpe_1d)} />
             <Stat label="Sharpe (20일)" value={formatScore(risk.sharpe_20d)} color={risk.sharpe_20d !== null && risk.sharpe_20d > 1 ? "var(--good)" : undefined} />
             <Stat label="최대낙폭" value={formatPct(risk.max_drawdown)} color={risk.max_drawdown !== null ? "var(--bad)" : undefined} />
@@ -165,7 +180,7 @@ export default function EvaluationDashboard({ data }: { data: EvaluationResponse
         <div className="eval-card">
           <h3>벤치마크 대비</h3>
           <p className="eval-desc">시장 수익률 대비 초과수익</p>
-          <div className="eval-stats-row">
+          <div className="eval-stats-2x2">
             <Stat label="시장 20일" value={formatPct(benchmark.benchmark_avg_return_20d)} />
             <Stat label="전략 20일" value={formatPct(benchmark.strategy_avg_return_20d)} color="var(--copper)" />
             <Stat
@@ -201,7 +216,7 @@ export default function EvaluationDashboard({ data }: { data: EvaluationResponse
               })}
             </div>
           )}
-          <div className="eval-stats-row" style={{ marginTop: 12 }}>
+          <div className="eval-stats-2x2" style={{ marginTop: 12 }}>
             <Stat label="총 윈도우" value={`${data.walk_forward.windows}`} />
             <Stat label="총 이벤트" value={`${data.walk_forward.total_events}`} />
             <Stat label="평균 수익률" value={formatPct(data.walk_forward.avg_return_20d)} color={data.walk_forward.avg_return_20d !== null && data.walk_forward.avg_return_20d > 0 ? "var(--good)" : undefined} />

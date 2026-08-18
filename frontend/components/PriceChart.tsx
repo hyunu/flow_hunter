@@ -192,14 +192,24 @@ export default function PriceChart({ bars, events, onSelect }: Props) {
     const score = chart.addSeries(
       HistogramSeries,
       {
-        priceFormat: { type: "price", precision: 1, minMove: 0.1 },
+        priceFormat: { type: "price", precision: 0, minMove: 1 },
         priceScaleId: "score",
         color: "#4ee0c6",
+        priceLineVisible: false,
+        autoscaleInfoProvider: () => {
+          const max = barsRef.current.reduce((hi, bar) => Math.max(hi, bar.smart_money_score), 0);
+          return {
+            priceRange: {
+              minValue: 0,
+              maxValue: Math.max(max, 1),
+            },
+          };
+        },
       },
       2,
     );
-    volume.priceScale().applyOptions({ scaleMargins: { top: 0.25, bottom: 0 }, autoScale: true });
-    score.priceScale().applyOptions({ scaleMargins: { top: 0.08, bottom: 0 }, autoScale: true });
+    volume.priceScale().applyOptions({ scaleMargins: { top: 0.18, bottom: 0 }, autoScale: true });
+    score.priceScale().applyOptions({ scaleMargins: { top: 0, bottom: 0 }, autoScale: true });
 
     chartRef.current = chart;
     candleRef.current = candles;
@@ -286,10 +296,12 @@ export default function PriceChart({ bars, events, onSelect }: Props) {
         color: bar.smart_money_score >= 80 ? "#4ee0c6" : bar.smart_money_score >= 60 ? "#2ab8a4" : "#3a5368",
       })),
     );
-    const markers: SeriesMarker<Time>[] = layers.events ? eventMarkers(events) : [];
-    markersRef.current?.setMarkers(markers);
     volumeProfileRef.current?.setBars(bars);
     fitAllRef.current();
+  }, [bars]);
+
+  useEffect(() => {
+    markersRef.current?.setMarkers(layers.events ? eventMarkers(events) : []);
   }, [bars, events, layers.events]);
 
   useEffect(() => {
@@ -301,9 +313,9 @@ export default function PriceChart({ bars, events, onSelect }: Props) {
     scoreRef.current?.applyOptions({ visible: layers.score });
     volumeProfileRef.current?.setVisible(layers.profile);
     const panes = chartRef.current?.panes();
-    panes?.[0]?.setStretchFactor(3);
-    panes?.[1]?.setStretchFactor(layers.volume ? 1 : 0.001);
-    panes?.[2]?.setStretchFactor(layers.score ? 1 : 0.001);
+    panes?.[0]?.setStretchFactor(4.2);
+    panes?.[1]?.setStretchFactor(layers.volume ? 0.82 : 0.001);
+    panes?.[2]?.setStretchFactor(layers.score ? 0.62 : 0.001);
     markersRef.current?.setMarkers(layers.events ? eventMarkers(eventsRef.current) : []);
   }, [layers]);
 
