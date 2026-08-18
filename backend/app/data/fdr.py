@@ -24,6 +24,12 @@ NAVER_SYMBOL = {
     "KOSDAQ": "KOSDAQ",
 }
 
+FDR_LISTING = {
+    "KOSPI": "KOSPI",
+    "KOSDAQ": "KOSDAQ",
+    "ETF": "ETF/KR",
+}
+
 RETRY_STATUSES = {429, 509, 502, 503, 504}
 
 
@@ -95,8 +101,9 @@ class FinanceDataReaderSource:
     def list_stocks(self, market: str) -> pd.DataFrame:
         import FinanceDataReader as fdr
 
+        listing_name = FDR_LISTING.get(market, market)
         try:
-            raw = fdr.StockListing(market)
+            raw = fdr.StockListing(listing_name)
         except Exception as exc:
             raise DataFetchError("종목 목록을 가져오지 못했습니다. 기본 종목으로 검색하세요.") from exc
         if raw is None or raw.empty:
@@ -104,9 +111,14 @@ class FinanceDataReaderSource:
 
         code_col = "Code" if "Code" in raw.columns else "Symbol"
         name_col = "Name"
+
+        def _symbol(value: object) -> str:
+            text = str(value).split(".")[0].strip()
+            return text.zfill(6) if text.isdigit() else text
+
         frame = pd.DataFrame(
             {
-                "symbol": raw[code_col].astype(str),
+                "symbol": [_symbol(value) for value in raw[code_col]],
                 "name": raw[name_col].astype(str),
                 "market": market,
             }

@@ -147,15 +147,38 @@ function AnalyzeInner() {
   }, [jobsPending, progressJobs]);
 
   useEffect(() => {
-    if (!fullscreen) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setFullscreen(false);
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key === "Escape") {
+        setFullscreen(false);
+        return;
+      }
+      const fullscreenKey =
+        event.code === "KeyF" || event.key.toLowerCase() === "f" || event.key === "ㄹ";
+      if (!fullscreenKey) return;
+      event.preventDefault();
+      if (!analysis) return;
+      setFullscreen((current) => !current);
     };
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [analysis]);
+
+  useEffect(() => {
+    if (!fullscreen) return;
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
     };
   }, [fullscreen]);
 

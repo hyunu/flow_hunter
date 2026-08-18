@@ -8,6 +8,7 @@ import {
   createSeriesMarkers,
   HistogramSeries,
   LineSeries,
+  TickMarkType,
   type IChartApi,
   type ISeriesApi,
   type ISeriesMarkersPluginApi,
@@ -36,6 +37,18 @@ function timeToDate(time: Time): string {
     return `${time.year}-${String(time.month).padStart(2, "0")}-${String(time.day).padStart(2, "0")}`;
   }
   return "";
+}
+
+function formatAxisDate(time: Time): string {
+  if (typeof time === "string") {
+    const [year, month, day] = time.split("-");
+    return `${year.slice(-2)}/${month}/${day}`;
+  }
+  if (typeof time === "object") {
+    return `${String(time.year).slice(-2)}/${String(time.month).padStart(2, "0")}/${String(time.day).padStart(2, "0")}`;
+  }
+  const date = new Date(time * 1000);
+  return `${String(date.getUTCFullYear()).slice(-2)}/${String(date.getUTCMonth() + 1).padStart(2, "0")}/${String(date.getUTCDate()).padStart(2, "0")}`;
 }
 
 function smaLine(bars: Bar[], window: number) {
@@ -140,6 +153,17 @@ export default function PriceChart({ bars, events, onSelect }: Props) {
         minimumWidth: 56,
         autoScale: true,
       },
+      localization: {
+        dateFormat: "yy/MM/dd",
+        timeFormatter: formatAxisDate,
+      },
+      crosshair: {
+        vertLine: {
+          color: "rgba(78, 224, 198, 0.55)",
+          labelBackgroundColor: "#4ee0c6",
+          labelVisible: true,
+        },
+      },
       timeScale: {
         borderColor: "#2a3a52",
         timeVisible: false,
@@ -150,6 +174,12 @@ export default function PriceChart({ bars, events, onSelect }: Props) {
         fixLeftEdge: true,
         fixRightEdge: true,
         lockVisibleTimeRangeOnResize: true,
+        tickMarkFormatter: (time: Time, tickMarkType: TickMarkType) => {
+          const label = formatAxisDate(time);
+          if (tickMarkType === TickMarkType.Year) return label.slice(0, 2);
+          if (tickMarkType === TickMarkType.Month) return label.slice(0, 5);
+          return label;
+        },
       },
       handleScale: {
         mouseWheel: true,

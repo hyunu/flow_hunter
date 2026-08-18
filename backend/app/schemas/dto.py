@@ -5,7 +5,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-MarketName = Literal["KOSPI", "KOSDAQ"]
+MarketName = Literal["KOSPI", "KOSDAQ", "ETF"]
 
 
 class StockOut(BaseModel):

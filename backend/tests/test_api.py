@@ -91,3 +91,9 @@ def test_analyze_and_fetch_results() -> None:
     backtest = client.get("/api/backtest/005930?market=KOSPI")
     assert backtest.status_code == 200
     assert backtest.json()["summaries"]
+
+
+def test_etf_market_is_searchable() -> None:
+    response = client.get("/api/stocks?market=ETF&q=KODEX")
+    assert response.status_code == 200
+    assert client.get("/api/stocks?market=UNKNOWN").status_code == 400

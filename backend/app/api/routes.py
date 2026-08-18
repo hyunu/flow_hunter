@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_source
-from app.core.constants import ALGORITHM_VERSION
+from app.core.constants import ALGORITHM_VERSION, SUPPORTED_MARKETS
 from app.data.errors import DataFetchError
 from app.data.source import MarketDataSource
 from app.db.session import get_db
@@ -48,8 +48,8 @@ def list_stocks(
     db: Session = Depends(get_db),
     source: MarketDataSource = Depends(get_source),
 ) -> list[StockOut]:
-    if market not in {"KOSPI", "KOSDAQ"}:
-        raise HTTPException(status_code=400, detail="시장은 KOSPI 또는 KOSDAQ만 지원합니다.")
+    if market not in SUPPORTED_MARKETS:
+        raise HTTPException(status_code=400, detail="시장은 KOSPI, KOSDAQ 또는 ETF만 지원합니다.")
     rows = search_stocks(db, source, market, q.strip())
     return [StockOut(market=row.market, symbol=row.symbol, name=row.name) for row in rows]
 

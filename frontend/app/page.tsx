@@ -8,6 +8,7 @@ import { defaultRange } from "@/lib/format";
 import type { MarketName, Stock } from "@/lib/types";
 
 const DEFAULT_STOCK: Stock = { market: "KOSPI", symbol: "005930", name: "삼성전자" };
+const DEFAULT_ETF: Stock = { market: "ETF", symbol: "069500", name: "KODEX 200" };
 
 function matchesQuery(stock: Stock, query: string): boolean {
   const needle = query.trim();
@@ -77,7 +78,9 @@ export default function HomePage() {
       (stocks.length === 1 ? stocks[0] : null) ??
       (query.trim() === DEFAULT_STOCK.name || query.trim() === DEFAULT_STOCK.symbol
         ? { ...DEFAULT_STOCK, market }
-        : null);
+        : query.trim() === DEFAULT_ETF.name || query.trim() === DEFAULT_ETF.symbol
+          ? { ...DEFAULT_ETF, market }
+          : null);
     if (!stock) {
       setOpen(true);
       setError("검색 결과에서 종목을 선택하세요.");
@@ -134,12 +137,21 @@ export default function HomePage() {
                 onChange={(event) => {
                   const next = event.target.value as MarketName;
                   setMarket(next);
-                  setSelected(next === DEFAULT_STOCK.market ? DEFAULT_STOCK : null);
-                  if (next !== DEFAULT_STOCK.market) setQuery("");
+                  if (next === DEFAULT_STOCK.market) {
+                    setSelected(DEFAULT_STOCK);
+                    setQuery(DEFAULT_STOCK.name);
+                  } else if (next === DEFAULT_ETF.market) {
+                    setSelected(DEFAULT_ETF);
+                    setQuery(DEFAULT_ETF.name);
+                  } else {
+                    setSelected(null);
+                    setQuery("");
+                  }
                 }}
               >
                 <option value="KOSPI">KOSPI</option>
                 <option value="KOSDAQ">KOSDAQ</option>
+                <option value="ETF">ETF</option>
               </select>
             </label>
             <label>

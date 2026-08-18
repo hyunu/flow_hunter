@@ -27,6 +27,14 @@ SEED_STOCKS = [
     ("KOSDAQ", "247540", "에코프로비엠"),
     ("KOSDAQ", "086520", "에코프로"),
     ("KOSDAQ", "028300", "에이치엘비"),
+    ("ETF", "069500", "KODEX 200"),
+    ("ETF", "102110", "TIGER 200"),
+    ("ETF", "122630", "KODEX 레버리지"),
+    ("ETF", "229200", "KODEX 코스닥150"),
+    ("ETF", "133690", "TIGER 미국나스닥100"),
+    ("ETF", "379800", "KODEX 미국S&P500"),
+    ("ETF", "360750", "TIGER 미국S&P500"),
+    ("ETF", "411060", "ACE KRX금현물"),
 ]
 
 _refresh_lock = threading.Lock()

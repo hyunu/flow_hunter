@@ -54,6 +54,9 @@ STATE_LABELS_KO = {
 MARKET_INDEX = {
     "KOSPI": "KS11",
     "KOSDAQ": "KQ11",
+    "ETF": "KS11",
 }
+
+SUPPORTED_MARKETS = ("KOSPI", "KOSDAQ", "ETF")
 
 TRADING_VALUE_NOTE = "거래대금은 close × volume 근사값이며, 실제 체결대금과 다를 수 있습니다."
