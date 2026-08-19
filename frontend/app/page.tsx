@@ -116,6 +116,9 @@ export default function HomePage() {
           <Link className="text-btn" href="/guide">
             설명
           </Link>
+          <Link className="text-btn" href="/manual">
+            인쇄
+          </Link>
         </div>
       </header>
 
@@ -126,6 +129,8 @@ export default function HomePage() {
             특정 주체를 식별하지 않습니다. 거래량, 거래대금, 가격 행동과 시장 맥락을 결합해
             Smart Money Score와 매집·개입·돌파·분산 구간을 추정하고, 이후 실제 수익률로 검증합니다.{" "}
             <Link href="/guide">용어와 보는 법</Link>
+            {" · "}
+            <Link href="/manual">인쇄용 설명서</Link>
           </p>
         </div>
         <form className="card form-grid" onSubmit={onSubmit}>

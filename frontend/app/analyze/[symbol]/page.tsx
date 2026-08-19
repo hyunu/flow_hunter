@@ -247,6 +247,9 @@ function AnalyzeInner() {
           <Link className="text-btn" href="/guide">
             설명
           </Link>
+          <Link className="text-btn" href="/manual">
+            인쇄
+          </Link>
         </div>
       </header>
 

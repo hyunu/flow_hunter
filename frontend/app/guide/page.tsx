@@ -73,9 +73,14 @@ export default function GuidePage() {
         <Link className="brand" href="/">
           Flow<span>Hunter</span>
         </Link>
-        <Link className="text-btn" href="/">
-          종목 분석
-        </Link>
+        <div className="tagline">
+          <Link className="text-btn" href="/">
+            종목 분석
+          </Link>
+          <Link className="text-btn" href="/manual">
+            인쇄용 설명서
+          </Link>
+        </div>
       </header>
 
       <h1 className="guide-title">이 화면, 이렇게 보면 됩니다</h1>

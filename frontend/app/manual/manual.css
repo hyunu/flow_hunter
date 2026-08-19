@@ -1,0 +1,269 @@
+.manual-page {
+  min-height: 100vh;
+  background: #d8dee8;
+  color: #1a2333;
+  overflow-x: hidden;
+}
+
+.manual-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: min(210mm, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 18px 0 12px;
+}
+
+.manual-toolbar a {
+  color: #3a4a63;
+  font-size: 13px;
+}
+
+.manual-print-btn {
+  background: #0c1320;
+  color: #e7eef8;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.manual-sheet {
+  width: min(210mm, calc(100% - 32px));
+  max-width: 100%;
+  margin: 0 auto 40px;
+  background: #fff;
+  color: #1a2333;
+  padding: 18mm 16mm 20mm;
+  box-shadow: 0 12px 40px rgba(12, 19, 32, 0.18);
+  border-radius: 4px;
+  overflow-x: hidden;
+}
+
+.manual-cover {
+  border-bottom: 2px solid #1a2333;
+  padding-bottom: 14px;
+  margin-bottom: 22px;
+}
+
+.manual-cover p {
+  margin: 4px 0 0;
+  color: #4a5a72;
+  font-size: 13px;
+}
+
+.manual-sheet h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.03em;
+}
+
+.manual-sheet h1 span {
+  color: #1a8f7c;
+}
+
+.manual-sheet h2 {
+  margin: 28px 0 10px;
+  font-size: 18px;
+  border-bottom: 1px solid #c5cedb;
+  padding-bottom: 6px;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.manual-sheet h3 {
+  margin: 16px 0 6px;
+  font-size: 14px;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.manual-sheet p,
+.manual-sheet li {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #2a3548;
+}
+
+.manual-sheet p {
+  margin: 0 0 10px;
+}
+
+.manual-sheet ol,
+.manual-sheet ul {
+  margin: 0 0 12px;
+  padding-left: 1.2em;
+}
+
+.manual-toc {
+  columns: 2;
+  gap: 24px;
+  font-size: 13px;
+  margin: 0 0 8px;
+  padding-left: 1.2em;
+}
+
+.manual-toc a {
+  color: #1a2333;
+}
+
+.manual-sheet table {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin: 0 0 14px;
+  font-size: 12px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.manual-sheet th,
+.manual-sheet td {
+  border: 1px solid #c5cedb;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+.manual-sheet th:first-child,
+.manual-sheet td:first-child {
+  width: 24%;
+}
+
+.manual-sheet th {
+  background: #eef2f7;
+  font-weight: 600;
+}
+
+.manual-note {
+  background: #eef8f6;
+  border-left: 3px solid #1a8f7c;
+  padding: 8px 12px;
+  margin: 0 0 14px;
+  font-size: 12.5px;
+}
+
+.manual-warn {
+  background: #f7f1ea;
+  border-left: 3px solid #b86a3a;
+  padding: 8px 12px;
+  margin: 0 0 14px;
+  font-size: 12.5px;
+}
+
+.manual-fig {
+  margin: 10px 0 16px;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.manual-fig svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid #c5cedb;
+  border-radius: 8px;
+  background: #f7f9fc;
+  font-family: var(--font-sans), "Noto Sans KR", sans-serif;
+}
+
+.manual-fig figcaption {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #5a6a80;
+  text-align: center;
+}
+
+.manual-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.manual-split article {
+  border: 1px solid #c5cedb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.manual-split h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  border: 0;
+  padding: 0;
+}
+
+.manual-example {
+  background: #f7f9fc;
+  border: 1px dashed #9aa8bb;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 0 0 14px;
+  page-break-inside: avoid;
+}
+
+.manual-example h3 {
+  margin-top: 0;
+}
+
+@media (max-width: 700px) {
+  .manual-split,
+  .manual-toc {
+    grid-template-columns: 1fr;
+    columns: 1;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 14mm 16mm;
+  }
+
+  html,
+  body,
+  .manual-page {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  .manual-toolbar,
+  .no-print {
+    display: none !important;
+  }
+
+  .manual-sheet {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .manual-sheet a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .manual-sheet h2 {
+    page-break-after: avoid;
+  }
+
+  .manual-sheet table,
+  .manual-note,
+  .manual-warn,
+  .manual-fig,
+  .manual-example,
+  .manual-split {
+    page-break-inside: avoid;
+  }
+}
