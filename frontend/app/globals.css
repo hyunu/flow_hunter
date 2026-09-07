@@ -264,10 +264,11 @@ select {
 }
 
 .metric {
+  position: relative;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 14px 16px;
+  padding: 14px 16px 30px;
 }
 
 .metric .k {
@@ -399,7 +400,19 @@ select {
 }
 
 .chart-hint {
+  position: relative;
   margin-top: 12px;
+}
+
+.chart-hint .hud {
+  margin: 0;
+}
+
+.chart-hint .hint-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  z-index: 4;
 }
 
 .chart-stage.is-full {
@@ -598,6 +611,39 @@ th.num {
   justify-content: space-between;
   align-items: baseline;
   margin: 0 0 12px;
+}
+
+.panel-title-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.panel-title-actions .hint-btn {
+  position: static;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  padding: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.icon-btn:hover {
+  color: var(--ink);
+}
+
+.icon-btn:disabled {
+  color: var(--muted);
+  opacity: 0.45;
+  cursor: default;
 }
 
 .error {
@@ -845,6 +891,60 @@ th.num {
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 14px 16px;
+  position: relative;
+}
+
+.hint-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  z-index: 3;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+  font-style: italic;
+  line-height: 1;
+  cursor: help;
+  user-select: none;
+}
+
+.hint-btn:hover {
+  border-color: var(--copper);
+  color: var(--copper);
+}
+
+.hint-tip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  width: 280px;
+  max-width: 80vw;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 10px 12px;
+  color: var(--ink);
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.55;
+  white-space: normal;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  pointer-events: none;
+}
+
+.hint-btn:hover .hint-tip,
+.hint-btn:focus-visible .hint-tip {
+  opacity: 1;
+  visibility: visible;
 }
 
 .eval-card h3 {

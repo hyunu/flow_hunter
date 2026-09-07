@@ -8,6 +8,7 @@ import {
   createSeriesMarkers,
   HistogramSeries,
   LineSeries,
+  LineStyle,
   TickMarkType,
   type IChartApi,
   type ISeriesApi,
@@ -144,8 +145,8 @@ export default function PriceChart({ bars, events, onSelect }: Props) {
         fontFamily: ibmPlexMono.style.fontFamily,
       },
       grid: {
-        vertLines: { color: "#1b2740" },
-        horzLines: { color: "#1b2740" },
+        vertLines: { color: "#131f36", style: LineStyle.Dashed },
+        horzLines: { color: "#131f36", style: LineStyle.Dashed },
       },
       rightPriceScale: {
         borderColor: "#2a3a52",

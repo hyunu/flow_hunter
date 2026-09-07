@@ -9,6 +9,7 @@ import BacktestCards from "@/components/BacktestCards";
 import BarTooltip from "@/components/BarTooltip";
 import EvaluationDashboard from "@/components/EvaluationDashboard";
 import EventTable from "@/components/EventTable";
+import Hint from "@/components/Hint";
 import PriceChart from "@/components/PriceChart";
 import RegimeStrip from "@/components/RegimeStrip";
 import { fetchAnalysis, fetchBacktest, fetchEvents, fetchEvaluation } from "@/lib/api";
@@ -200,9 +201,16 @@ function AnalyzeInner() {
       ) : (
         <div className="panel-title">
           <h2 style={{ margin: 0, fontSize: 18 }}>차트</h2>
-          <button className="text-btn" type="button" disabled={!analysis} onClick={() => setFullscreen(true)}>
-            전체화면
-          </button>
+          <div className="panel-title-actions">
+            <Hint>
+              차트는 같은 날짜를 세로로 맞춰 세 개 칸으로 나뉩니다. 위(캔들)에서 시가·고가·저가·종가를,
+              가운데(거래량)에서 그날 거래량을, 아래(Score)에서 Smart Money Score를 확인합니다.
+              화살표·점은 탐지된 상태가 있는 날이며, 점수·상태 계산에는 해당일 이후 정보를 사용하지 않습니다.
+            </Hint>
+            <button className="icon-btn" type="button" disabled={!analysis} onClick={() => setFullscreen(true)} aria-label="전체화면">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 5.5V2.5h3M14 5.5V2.5h-3M2 10.5V13.5h3M14 10.5V13.5h-3"/></svg>
+            </button>
+          </div>
         </div>
       )}
       <div className="chart-canvas">
@@ -231,6 +239,11 @@ function AnalyzeInner() {
       {fullscreen ? null : (
             <div className="chart-hint">
               <BarTooltip bar={selected} />
+              <Hint>
+                Vol은 최근 20일 평균 대비 거래량 배수, Val은 거래대금 배수(종가 × 거래량 근사).
+                등락은 전일 종가 대비 등락률, OBV는 거래량 누적 선으로 매수·매도 우위 방향을 보여줍니다.
+                MA20·60·120은 이동평균선으로 단기·중기·장기 추세를 참고합니다.
+              </Hint>
             </div>
       )}
     </section>
@@ -268,22 +281,40 @@ function AnalyzeInner() {
         <article className="metric">
           <div className="k">Smart Money Score</div>
           <div className="v">{latest ? formatScore(latest.smart_money_score) : <span className="pulse">…</span>}</div>
+          <Hint>
+            그날의 일봉에서 대규모 자금 활동처럼 보이는 정도를 0~100으로 요약한 점수입니다. 높을수록
+            거래량·거래대금·가격 행동이 겹칩니다. 대략 40 미만은 약한 편, 70 이상은 거래량과 대금이
+            함께 크게 뛴 날입니다. 절대 기준은 아닙니다.
+          </Hint>
         </article>
         <article className="metric">
           <div className="k">Confidence</div>
           <div className="v">{latest ? `${formatScore(latest.confidence)}%` : <span className="pulse">…</span>}</div>
+          <Hint>
+            점수를 얼마나 믿어도 되는지에 가깝습니다. 데이터가 짧거나 지표가 한두 개만 맞거나 시장
+            전체 거래량과 비교할 지수가 없으면 낮아집니다. 점수는 높은데 Confidence가 낮으면 단정하지
+            마세요.
+          </Hint>
         </article>
         <article className="metric">
           <div className="k">현재 상태</div>
           <div className="v" style={{ fontSize: 22 }}>
             {latest?.state_label ?? <span className="pulse">…</span>}
           </div>
+          <Hint>
+            그날의 점수와 최근 흐름을 보고 붙인 이름(매집 시작·매집·강한 개입·돌파·분산·이탈 등)입니다.
+            누군가 정했다는 확정이 아니라 “그런 모양으로 보인다”입니다.
+          </Hint>
         </article>
         <article className="metric">
           <div className="k">이벤트</div>
           <div className="v">
             {events ? events.events.length : <span className="pulse">…</span>}
           </div>
+          <Hint>
+            “특이 활동 없음”이 아닌 날이 같은 이름으로 이어진 덩어리의 개수입니다. 하루짜리면 1건,
+            매집이 2주 이어져도 1건입니다.
+          </Hint>
         </article>
       </section>
 
